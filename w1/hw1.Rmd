@@ -1,0 +1,123 @@
+---
+title: "DATA 605 HW1-YINA QIAO"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(dplyr)
+library(gifski)
+
+```
+
+# HW Outline
+
+1. **Part 1: Draw Initials 'Y' and 'Q'**
+   - Creation of 'Y'
+   - Creation of 'Q'
+
+2. **Part 2: Transformation**
+   - Application of Transformations to 'Y' and 'Q'
+
+
+# Part 1 Draw Initials Y Q
+
+- Create Y
+
+```{r}
+
+# Diagonal line 1 (left branch of Y)
+x_1_y <- seq(-3, -2, length.out = 500)
+y_1_y <- seq(2, 0, length.out = 500)
+
+# Diagonal line 2 (right branch of Y)
+x_2_y <- seq(-1, -2, length.out = 500)
+y_2_y <- seq(2, 0, length.out = 500)
+
+# Vertical line (stem of Y)
+x_3_y <- rep(-2, 500)
+y_3_y <- seq(0, -2, length.out = 500)
+
+# Combine x and y coordinates for Y
+x_y <- c(x_1_y, x_2_y, x_3_y)
+y_y <- c(y_1_y, y_2_y, y_3_y)
+
+plot(y_y~x_y, xlim=c(-3,4),ylim=c(-3,3))
+```
+
+- Create Q
+```{r}
+# Circle for Q
+r = 1  # Radius
+h = 2  # x-coordinate of center
+k = 0  # y-coordinate of center
+theta <- seq(0, 2 * pi, length.out = 1000)
+x_q_circle <- h + r * cos(theta)  
+y_q_circle <- k + r * sin(theta)  
+
+# Plot the circle
+plot(x_q_circle, y_q_circle, type = "l", xlim = c(-3, 4), ylim = c(-3, 3), aspect = 1, lwd = 6)
+
+# Tail
+x1 <- 2
+y1 <- -0.5
+x2 <- 2.5
+y2 <- -1.5
+m <- (y2 - y1) / (x2 - x1)
+b <- y1 - m * x1
+x_2_q <- seq(2, 2.5, length.out = 100)
+y_2_q <- m * x_2_q + b
+
+# Add the tail to the plot
+lines(x_2_q, y_2_q, lwd = 6)
+
+```
+
+- Combined YQ
+```{r}
+# Combine x and y coordinates for Y and Q
+x <- c(x_y, x_q_circle, x_2_q)
+y <- c(y_y, y_q_circle, y_2_q)
+yq <- rbind(x, y)
+plot(y~x, xlim=c(-3,4),ylim=c(-3,3))
+```
+
+# Part 2 Transformation
+- Use a loop that changes the transformation matrix incrementally to demonstrate 1) shear, 2) scaling, 3)  rotation , and 4) projection in animated fashion
+- A Pop up window will open to demonstrate the animation
+```{r}
+# Transformation types
+trans_type <- c("identity", "shear", "scale", "rotate", "project")
+
+# Open a new plotting window
+x11()
+
+# Loop through transformation types
+for (t in trans_type) {
+  for (i in seq(0, pi*2, length.out = 60)) {
+    if (t == "identity") {
+      trans_matrix <- diag(2)
+    } else if (t == "shear") {
+      trans_matrix <- matrix(c(1, 0, i, 1), nrow = 2, ncol = 2)
+    } else if (t == "scale") {
+      trans_matrix <- diag(c(1 + i/10, 1 + i/10))
+    } else if (t == "rotate") {
+      trans_matrix <- matrix(c(cos(i), sin(i), -sin(i), cos(i)), nrow = 2, ncol = 2)
+    } else if (t == "project") {
+      trans_matrix <- matrix(c(1, 0, 0, 0), nrow = 2, ncol = 2)
+    }
+
+    # Apply the transformation to YQ and plot
+    tyq <- apply(yq, 2, function(z) trans_matrix %*% z)
+    plot(tyq[1,] ~ tyq[2,], xlim = c(-3, 4), ylim = c(-3, 3), xlab = "x", ylab = "y", main = paste(t, "transformation at i =", round(i, 2)))
+    Sys.sleep(0.1)
+  }
+}
+
+```
+
+
+
+
+

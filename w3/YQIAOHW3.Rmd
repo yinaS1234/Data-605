@@ -1,0 +1,135 @@
+---
+title: "DATA 605 HW3-YINA QIAO"
+output:
+  html_document:
+    df_print: paged
+---
+
+### (1) What is the rank of the matrix A?
+```{r}
+A <- matrix(c(1,2,3,4,
+              -1,0,1,3,
+              0,1,-2,1,
+              5,4,-2,-3), 4, byrow=T)
+
+qr(A)$rank
+```
+
+
+### (2) Given an mxn matrix where m > n, what can be the maximum rank? The minimum rank, assuming that the matrix is non-zero?
+- **Maximum Rank**: For an $m \times n$ matrix where $m > n$, the maximum rank is $n$.
+- **Minimum Rank**: For a non-zero matrix, the minimum rank is 1.
+
+### (3) What is the rank of matrix B?
+
+```{r}
+B <- matrix(c(1,2,1,
+              3,6,3,
+              2,4,2), 3, byrow=T)
+
+qr(B)$rank
+```
+
+
+### (4) Compute the eigenvalues and eigenvectors of the matrix A. You'll need to show your work. You'll need to write out the characteristic polynomial and show your solution.
+
+
+```{r}
+A <- matrix(c(1,2,3,
+              0,4,5,
+              0,0,6), 3, byrow=T)
+```
+
+## Compute eigenvalue steps
+
+Step by step approach
+
+we will compute the characteristic polynomial of \( A \). The characteristic polynomial of a matrix \( A \) is given by \( \det(A - \lambda I) \), where \( \lambda \) represents an eigenvalue and \( I \) is the identity matrix of the same size as \( A \)
+
+1) ${det}\left(A-\lambda \,I\right)\,=\,0$
+
+2) ${det}\left(\begin{bmatrix}1&2&3\\0&4&5\\0&0&6\end{bmatrix} - \begin{bmatrix}\lambda&0&0\\0&\lambda&0\\0&0&\lambda\end{bmatrix}\right)=0$
+
+3) ${det}\left(\begin{bmatrix}1-\lambda &2&3\\0&4-\lambda &5\\0&0&6-\lambda \end{bmatrix}\right)=0$
+
+Since this is an upper triangular matrix, the determinant is the product of the diagonal elements:
+
+\[ \det(A - \lambda I) = (1-\lambda)(4-\lambda)(6-\lambda) \]
+The diagonal elements lead to the characteristic polynomial \( p(\lambda) \) which is defined as
+
+\[ p(\lambda) = (1-\lambda)(4-\lambda)(6-\lambda) \]
+
+Expanding this polynomial would result in a cubic equation in terms of \( \lambda \). 
+ _Characteristic Polynomial:_ $-\lambda^3 + 11\lambda^2 - 34\lambda + 24=0$
+
+Now, we need to solve this equation for \( \lambda \) to find the eigenvalues:
+
+\[ (1-\lambda)(4-\lambda)(6-\lambda) = 0 \]
+
+
+4) $\lambda_1=6, \lambda_2=4, \lambda_3=1$
+
+## Compute eigenvector Steps
+
+### Eigenvector for \( \lambda_1 = 6 \)
+
+For \( \lambda_1 = 6 \), we found the corresponding eigenvector by solving \( (A - 6I)x = 0 \). The solution led us to:
+
+- \( x_1 = \frac{8}{5}t \)
+- \( x_2 = \frac{5}{2}t \)
+- \( x_3 = t \)
+
+So, the eigenvector corresponding to \( \lambda_1 = 6 \) can be expressed as a multiple of:
+
+\[ \begin{bmatrix} \frac{8}{5} \\ \frac{5}{2} \\ 1 \end{bmatrix} \]
+
+### Eigenvector for \( \lambda_2 = 4 \)
+
+For \( \lambda_2 = 4 \), after solving \( (A - 4I)x = 0 \), we deduced:
+
+- \( x_1 = \frac{2}{3}s \)
+- \( x_2 = s \)
+- \( x_3 = 0 \)
+
+Thus, the eigenvector for \( \lambda_2 = 4 \) is a multiple of:
+
+\[ \begin{bmatrix} \frac{2}{3} \\ 1 \\ 0 \end{bmatrix} \]
+
+### Eigenvector for \( \lambda_3 = 1 \)
+
+Finally, for \( \lambda_3 = 1 \), solving \( (A - I)x = 0 \) gave us:
+
+- \( x_1 = s \)
+- \( x_2 = 0 \)
+- \( x_3 = 0 \)
+
+Therefore, the eigenvector associated with \( \lambda_3 = 1 \) is a multiple of:
+
+\[ \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} \]
+
+In summary, the eigenvectors corresponding to the eigenvalues \( \lambda_1 = 6 \), \( \lambda_2 = 4 \), and \( \lambda_3 = 1 \) of matrix \( A \) are proportional to \( \begin{bmatrix} \frac{8}{5} \\ \frac{5}{2} \\ 1 \end{bmatrix} \), \( \begin{bmatrix} \frac{2}{3} \\ 1 \\ 0 \end{bmatrix} \),\( \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} \), respectively.
+
+
+
+
+## Validation of Eigenvectors with R's `eigen()` Function
+
+We'll compare our manually calculated eigenvectors with those obtained from R's `eigen()` function to confirm their correctness.
+
+For \( \lambda_1 = 6 \): The original non-normalized vector we found was \( \begin{bmatrix} \frac{8}{5} \\ \frac{5}{2} \\ 1 \end{bmatrix} \). If we normalize this, we should expect the components to have the same ratio as the R output. The ratios of \( \frac{8}{5} : \frac{5}{2} : 1 \) simplify to \( 1.6 : 2.5 : 1 \). The R output ratios are approximately \( 0.51 : 0.80 : 0.32 \), which, when scaled to match the last component, give \( 1.6 : 2.5 : 1 \), matching our original vector.
+
+For \( \lambda_2 = 4 \): The vector we calculated was \( \begin{bmatrix} \frac{2}{3} \\ 1 \\ 0 \end{bmatrix} \). The R output \( \begin{bmatrix} 0.5547002 \\ 0.8320503 \\ 0 \end{bmatrix} \) has the component ratio \( \frac{0.5547002}{0.8320503} \approx \frac{2}{3} \), which matches our calculation.
+
+For \( \lambda_3 = 1 \): Both our calculation and R's output provide the vector \( \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} \), so they match perfectly.
+
+### Comparison with R's `eigen()` Function
+
+
+```{r}
+print(eigen(A)$values)
+print(eigen(A)$vectors)
+```
+
+
+
+

@@ -1,0 +1,26 @@
+---
+title: "DATA605 - Discussion Week 1"
+author: "Yina Qiao"
+output:
+  html_document:
+    df_print: paged
+---
+# C30
+
+\[
+x + y = 5 \\
+2x -y = 3
+\]
+
+```{r}
+# Define the coefficients matrix (A) and the right-hand side vector (b)
+
+# Solve the system of equations
+solution <- solve(matrix(c(1,1,2,-1), nrow = 2, byrow = TRUE), c(5,3))
+
+# Print the solution
+print(solution)
+
+```
+
+

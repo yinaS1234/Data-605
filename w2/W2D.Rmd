@@ -1,0 +1,45 @@
+---
+title: "DATA 605 W2 discussion-YINA QIAO"
+output:
+  html_document:
+    df_print: paged
+---
+# C36
+
+Find the rank and nullity of the matrix 
+\[
+A =
+\begin{bmatrix}
+1 & 2 & 1 & 1 & 1\\
+1 &3&2&0&4 \\
+1&2&1&1&1
+\end{bmatrix}
+\]
+
+```{r}
+# Load necessary library
+library(pracma)
+
+A <- matrix(c(1, 2, 1, 1, 1,
+              1, 3, 2, 0, 4,
+              1, 2, 1, 1, 1), nrow = 3, byrow = TRUE)
+
+# Find the rank of A
+rank_A <- qr(A)$rank
+print(paste("Rank of A:", rank_A))
+
+# Calculate nullity of A
+nullity_A <- ncol(A) - rank_A
+print(paste("Nullity of A:", nullity_A))
+
+# Below is extra, just exploration
+# Find the null space of A
+null_space <- nullspace(A)
+print(null_space)
+```
+
+
+
+
+
+

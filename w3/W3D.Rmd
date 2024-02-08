@@ -1,0 +1,48 @@
+---
+title: "DATA 605 W3 discussion-YINA QIAO"
+output:
+  html_document:
+    df_print: paged
+---
+# C24
+
+**Find the eigenvalues, eigenspaces, algebraic and geometric multiplicities for**
+\[A = \begin{bmatrix}
+1&−1&1\\
+−1&1&−1\\
+1&−1&1
+\end{bmatrix}
+\]
+
+```{r}
+A <- matrix(c(1, -1, 1, -1, 1, -1, 1, -1, 1), nrow = 3, byrow = TRUE)
+# Find the eigenvalues
+eigenvalues<-eigen(A)$value
+print(eigenvalues)
+
+
+# Find eigenvectors
+eigenvectors<-eigen(A)$vectors
+print(eigenvectors)
+
+# Find eigenspaces
+eigenspaces <-lapply(seq_along(eigenvalues), function(i) {
+  eigenvectors[, i]
+})
+
+print(eigenspaces)
+
+# Calculate algebraic multiplicities (the multiplicity of each eigenvalue)
+algebraic_multiplicities<-table(round(eigenvalues, digits = 10))
+print(algebraic_multiplicities)
+
+
+# Calculate geometric multiplicities (the dimension of each eigenspace)
+geometric_multiplicities<-sapply(eigenvalues, function(lambda) {
+  sum(abs(eigenvalues - lambda) < 1e-10)
+})
+print(geometric_multiplicities)
+```
+
+
+
