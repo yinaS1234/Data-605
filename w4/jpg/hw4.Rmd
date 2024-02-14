@@ -1,0 +1,116 @@
+---
+title: "DATA 605 HW4 YINA QIAO"
+output: html_document
+---
+Requirement: With the attached data file, build and visualize  eigenimagery that accounts for 80% of the variability.  Provide full R code and discussion.
+
+## File Loading and Preprocessing
+
+Provied data contains 17 images. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+memory.size(max = TRUE)
+library(doParallel)
+library(foreach)
+library(jpeg)
+library(EBImage)
+```
+
+```{r}
+# Define the file path where the images are located
+files <- list.files(path = "/Users/linda/Desktop/elearning/CUNY-MSDS/data 605/w4/jpg", pattern = "\\.jpg")
+```
+
+## Image Resizing and Plotting:
+
+
+```{r}
+# Parameters for image processing
+height <- 1200
+width <- 2500
+scale <- 20
+
+# Function to plot a JPEG image
+plot_jpeg <- function(path, add = FALSE) {
+  require('jpeg')
+  jpg <- readJPEG(path, native = TRUE)
+  res <- dim(jpg)[2:1]
+  if (!add) {
+    plot(1, 1, xlim = c(1, res[1]), ylim = c(1, res[2]),
+         asp = 1, type = 'n', xaxs = 'i', yaxs = 'i',
+         xaxt = 'n', yaxt = 'n', xlab = '', ylab = '',
+         bty = 'n')
+  }
+  rasterImage(jpg, 1, 1, res[1], res[2])
+}
+
+# Initialize an array to store the images
+im <- array(rep(0, length(files) * height/scale * width/scale * 3),
+            dim = c(length(files), height/scale, width/scale, 3))
+
+# Load and resize images
+for (i in seq_along(files)) {
+  tmp <- paste0("/Users/linda/Desktop/elearning/CUNY-MSDS/data 605/w4/jpg/", files[i])
+  temp <- EBImage::resize(readJPEG(tmp), height/scale, width/scale)
+  im[i,,,] <- array(temp, dim = c(1, height/scale, width/scale, 3))
+}
+
+
+# Set up plotting parameters
+par(mfrow = c(3, 3))
+par(mai = c(0.3, 0.3, 0.3, 0.3))
+
+# Plot the first 9 images only
+for (i in 1:9) {
+  plot_jpeg(writeJPEG(im[i,,,]))
+}
+
+```
+
+## Principal Component Analysis (PCA):
+
+
+
+```{r}
+# Prepare the data for PCA
+dim(im) <- c(length(files), height * width * 3 / scale^2)
+mypca <- princomp(t(as.matrix(im)), scores = TRUE, cor = TRUE)
+
+# Calculate and print the variance
+cat("Variance explained by each component:\n")
+print(mypca$sdev^2 / sum(mypca$sdev^2))
+
+# Calculate the cumulative variance
+cumulative_variance <- cumsum(mypca$sdev^2 / sum(mypca$sdev^2))
+cat("Cumulative variance explained:\n")
+print(cumulative_variance)
+
+# Find the number of components explaining 80% variance
+num_components_80 <- which(cumulative_variance >= 0.80)[1]
+cat("Number of components explaining at least 80% variance: ", num_components_80, "\n")
+
+```
+
+## Visualization of Eigenimages explaining 80% variance:
+
+
+
+```{r}
+# Reshape the PCA scores to visualize the eigenimages
+mypca2 <- t(mypca$scores)
+dim(mypca2) <- c(length(files), height/scale, width/scale, 3)
+
+# Set up plotting parameters for eigenimages
+par(mfrow = c(1, num_components_80))
+par(mai = c(0.001, 0.001, 0.001, 0.001))
+
+# Plot the eigenimages explaining 80% variance
+for (i in 1:num_components_80) {
+  plot_jpeg(writeJPEG(mypca2[i,,,], quality = 1, bg = "white"))
+}
+
+```
+
+### Discussion
+**The analysis finds that only three components are needed to explain at least 80% of the variance in the image dataset. This suggests that a substantial portion of the variability in the images can be represented by a relatively small number of components. **
