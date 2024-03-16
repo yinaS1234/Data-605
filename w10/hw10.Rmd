@@ -1,0 +1,105 @@
+
+---
+title: " DATA 605 HW10"
+author: "Yina Qiao"
+
+output: html_document
+---
+
+## Problem Statement
+
+Smith is in jail with 1 dollar and can get out on bail if he has 8 dollars. A guard agrees to make a series of bets with him. If Smith bets A dollars, he wins A dollars with probability 0.4 and loses A dollars with probability 0.6.
+
+
+### (a) Timid Strategy
+
+Smith bets 1 dollar each time. The probability of reaching 8 dollars before losing all his money 
+
+
+- The example is well-suited to apply the well-known gambler ruin's problem
+- where a player, starting with a certain stake, aims to reach a goal before depleting their resources, under the conditions of winning and losing fixed amounts each round.
+
+
+
+```{r}
+z <- 1  # Smith's starting amount
+M <- 8  # Target amount to win
+q <- 0.6  # Probability of losing a bet
+p <- 0.4  # Probability of winning a bet
+
+if (p != q) {
+  qz <- ((q/p)^z - 1) / ((q/p)^M - 1)
+} else {
+  qz <- z / M
+}
+
+qz
+```
+
+### simulation 
+```{r}
+start_dollars <- 1
+out_jail <- c()
+
+for (j in 1:100000) {
+  samples <- c(start_dollars)
+  for (x in 1:100) {
+    samples <- append(samples, sample(c(1,-1), size=1, replace=T, prob=c(.4,.6)))
+    if (sum(samples) >= 8){
+      out_jail <- append(out_jail, 1)
+      break
+    } else if (sum(samples) <= 0) {
+      break
+    }
+  }
+}  
+
+sum(out_jail) / 100000
+```
+
+
+
+### (b) Bold Strategy
+
+Smith bets as much as possible but not more than necessary to reach 8 dollars.
+
+
+
+- Direct calculation: \( p_1 = 0.4^3 \), considering only wins needed to reach 8 dollars.
+
+
+```{r bold_strategy, echo=TRUE}
+p1_bold <- 0.4^3
+cat("Probability with bold strategy:", p1_bold)
+```
+
+### simulation
+
+```{r}
+start_dollars <- 1
+out_jail <- c()
+
+for (j in 1:100000) {
+  samples <- c(start_dollars)
+  for (x in 1:100) {
+    samples <- append(samples, sample(c(sum(samples),-sum(samples)), size=1, replace=T, prob=c(.4,.6)))
+    if (sum(samples) >= 8){
+      out_jail <- append(out_jail, 1)
+      break
+    } else if (sum(samples) <= 0) {
+      break
+    }
+  }
+}  
+
+sum(out_jail) / 100000
+```
+
+### (c) Comparison of Strategies
+
+The strategy with a higher probability \( p_1 \) gives Smith a better chance of getting out of jail.\n\
+Probability with timid strategy : 0.02\n\
+Probability with bold strategy: 0.064,\n\
+Therefore bold strategy gives a smith a better chance.
+
+
