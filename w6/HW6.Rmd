@@ -1,0 +1,219 @@
+---
+title: "DATA 605 HW6-YINA QIAO"
+output:
+  html_document:
+    df_print: paged
+---
+
+**1. A bag contains 5 green and 7 red jellybeans. How many ways can 5 jellybeans be withdrawn from the bag so that the number of green ones withdrawn will be less than 2?**
+```{r}
+# Total jellybeans of each color
+green_jellybeans <- 5
+red_jellybeans <- 7
+
+# Scenario 1: No green jellybeans
+ways_no_green <- choose(red_jellybeans, 5)
+
+# Scenario 2: 1 green jellybean
+ways_one_green <- choose(green_jellybeans, 1) * choose(red_jellybeans, 4)
+
+# Total ways
+total_ways <- ways_no_green + ways_one_green
+
+cat("Total number of ways to withdraw 5 jellybeans with less than 2 green ones:", total_ways)
+
+```
+
+**2. A certain congressional committee consists of 14 senators and 13 representatives. How many ways can a subcommittee of 5 be formed if at least 4 of the members must be representatives?**
+
+
+```{r}
+# Total senators and representatives
+senators <- 14
+representatives <- 13
+
+# Scenario 1: 4 representatives and 1 senator
+ways_4_rep_1_sen <- choose(representatives, 4) * choose(senators, 1)
+
+# Scenario 2: All 5 members are representatives
+ways_5_rep <- choose(representatives, 5)
+
+# Total ways to form the subcommittee
+total_ways <- ways_4_rep_1_sen + ways_5_rep
+
+cat("Total number of ways to form a subcommittee with at least 4 representatives:", total_ways)
+
+```
+
+
+**3. If a coin is tossed 5 times, and then a standard six-sided die is rolled 2 times, and finally a group of three cards are drawn from a standard deck of 52 cards without replacement, how many different outcomes are possible?**
+
+```{r}
+# Coin tosses
+coin_outcomes <- 2^5
+
+# Die rolls
+die_outcomes <- 6^2
+
+# Card draws
+card_outcomes <- choose(52, 3)
+
+# Total outcomes
+total_outcomes <- coin_outcomes * die_outcomes * card_outcomes
+
+cat("Total number of different outcomes:", total_outcomes)
+```
+
+**4.3 cards are drawn from a standard deck without replacement. What is the probability that at least one of the cards drawn is a 3? Express your answer as a fraction or a decimal number rounded to four decimal places.**
+
+```{r}
+# Probability of not drawing a '3' in each draw
+p_not_3_first_draw <- 48 / 52
+p_not_3_second_draw <- 47 / 51
+p_not_3_third_draw <- 46 / 50
+
+# Probability of not drawing a '3' in any of the 3 draws
+p_no_3s <- p_not_3_first_draw * p_not_3_second_draw * p_not_3_third_draw
+
+# Rounding the result to four decimal places
+p_at_least_one_3_rounded <- round(1 - p_no_3s, 4)
+
+# Output the result
+p_at_least_one_3_rounded
+
+```
+
+**5.Lorenzo is picking out some movies to rent, and he is primarily interested in documentaries and mysteries. He has narrowed down his selections to 17 documentaries and 14 mysteries.**
+\n\
+**Step 1. How many different combinations of 5 movies can he rent?**
+
+```{r}
+# Total movies
+total_movies <- 17 + 14
+
+# Combinations of 5 movies from the total
+total_combinations <- choose(total_movies, 5)
+
+cat("Total combinations of 5 movies:", total_combinations)
+
+```
+
+**Step 2.How many different combinations of 5 movies can he rent if he wants at least
+one mystery?**
+
+
+```{r}
+# Combinations of 5 documentaries (no mysteries)
+doc_combinations <- choose(17, 5)
+
+# Combinations with at least one mystery
+combinations_with_mystery <- total_combinations - doc_combinations
+
+cat("Combinations of 5 movies with at least one mystery:", combinations_with_mystery)
+
+```
+
+**6. In choosing what music to play at a charity fund raising event, Cory needs to have an equal number of symphonies from Brahms, Haydn, and Mendelssohn. If he is setting up a schedule of the 9 symphonies to be played, and he has 4 Brahms, 104 Haydn, and 17 Mendelssohn symphonies from which to choose, how many different schedules are possible? Express your answer in scientific notation rounding to the hundredths place**
+
+
+```{r}
+# Combinations of choosing symphonies
+brahms_combinations <- choose(4, 3)
+haydn_combinations <- choose(104, 3)
+mendelssohn_combinations <- choose(17, 3)
+
+# Total possible schedules
+total_schedules <- brahms_combinations * haydn_combinations * mendelssohn_combinations * factorial(9)
+
+# Expressing the result in scientific notation
+total_schedules_sci <- formatC(total_schedules, format = "e", digits = 2)
+
+cat("Total possible schedules: ", total_schedules_sci)
+
+```
+
+**7.An English teacher needs to pick 13 books to put on his reading list for the next school
+year, and he needs to plan the order in which they should be read. He has narrowed
+down his choices to 6 novels, 6 plays, 7 poetry books, and 5 nonfiction books.**
+\n\
+
+**Step 1. If he wants to include no more than 4 nonfiction books, how many different
+reading schedules are possible? Express your answer in scientific notation rounding to
+the hundredths place.**
+
+```{r}
+total_schedules_step_1_sci <- (choose(24,13)-choose(19,8)*choose(5,5))*factorial(13)
+
+
+cat("Total reading schedules for Step 1: ", total_schedules_step_1_sci)
+
+```
+
+\n\
+
+**Step 2. If he wants to include all 6 plays, how many different reading schedules are
+possible? Express your answer in scientific notation rounding to the hundredths place.**
+
+```{r}
+# Choose 7 books from the remaining 18 (excluding the 6 mandatory plays)
+
+# Total reading schedules including permutations
+total_schedules_step_2 <- choose(18, 7) * factorial(13)
+
+# Express the result in scientific notation
+total_schedules_step_2_sci <- formatC(total_schedules_step_2, format = "e", digits = 2)
+
+cat("Total reading schedules for Step 2: ", total_schedules_step_2_sci)
+
+```
+
+**8.Zane is planting trees along his driveway, and he has 5 sycamores and 5 cypress trees to plant in one row. What is the probability that he randomly plants the trees so that all 5 sycamores are next to each other and all 5 cypress trees are next to each other?Express your answer as a fraction or a decimal number rounded to four decimal places. **
+
+```{r}
+#When we consider planting all 5 sycamores together and all 5 cypress trees together, we can think of each group of 5 trees as a single unit. Thus, we have 2 units to arrange, which can be done in 2! ways (either sycamores first or cypress first).
+
+# Total ways to plant the trees
+total_ways <- factorial(10) / (factorial(5) * factorial(5))
+
+# Ways with sycamores and cypress together
+favorable_ways <- factorial(2)
+
+# Probability calculation
+rounded_probability <- round(favorable_ways / total_ways,4)
+
+rounded_probability
+
+```
+
+
+**9.If you draw a queen or lower from a standard deck of cards, I will pay you $4. If not, you pay me $16. (Aces are considered the highest card in the deck.)**
+**Step 1. Find the expected value of the proposition. Round your answer to two decimal
+places. Losses must be expressed as negative values.**
+
+```{r}
+# Step 1: Calculate the expected value per game
+probability_win <- 44 / 52
+probability_lose <- 8 / 52
+expected_value <- probability_win * 4 + probability_lose * (-16)
+
+# Step 2: Calculate the expected total from 833 games
+expected_total <- expected_value * 833
+
+# Rounding the results
+expected_value_rounded <- round(expected_value, 2)
+expected_total_rounded <- round(expected_total, 2)
+
+# Displaying the results
+cat("Expected value per game: $", expected_value_rounded)
+
+
+```
+
+**Step 2. If you played this game 833 times how much would you expect to win or lose?
+Round your answer to two decimal places. Losses must be expressed as negative
+values. **
+
+```{r}
+cat("Expected total from 833 games: $", expected_total_rounded)
+```
+
