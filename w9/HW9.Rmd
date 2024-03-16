@@ -1,0 +1,112 @@
+---
+title: "DATA 605 HW9-YINA QIAO"
+output:
+  html_document:
+    df_print: paged
+---
+
+**11 The price of one share of stock in the Pilsdorff Beer Company (see Exercise 8.2.12) is given by Yn on the nth day of the year. Finn observes that the differences Xn = Yn+1 − Yn appear to be independent random variables
+with a common distribution having mean µ = 0 and variance σ2 = 1/4.**
+
+If Y1 = 100, estimate the probability that Y365 is\n\
+(a) ≥ 100.\n\
+(b) ≥ 110.\n\
+(c) ≥ 120\n\
+
+```{r}
+# Parameters
+mu_X <- 0  
+sigma_X <- sqrt(1/4)  
+Y1 <- 100 
+n <- 364
+
+# Mean and standard deviation for Y365
+mu_Y365 <- Y1 + n * mu_X
+sigma_Y365 <- sqrt(n) * sigma_X
+
+# Probability calculations
+# P(Y365 >= 100) is 0.5 due there's a 50-50 chance, 
+# it's just as likely for the price to be near where it started as anywhere else. 
+P_Y365_ge_100 <- 0.5  
+P_Y365_ge_110 <- 1 - pnorm(110, mu_Y365, sigma_Y365)
+P_Y365_ge_120 <- 1 - pnorm(120, mu_Y365, sigma_Y365)
+
+# Output results
+cat("P(Y365 >= 100):", P_Y365_ge_100, "\nP(Y365 >= 110):", P_Y365_ge_110, "\nP(Y365 >= 120):", P_Y365_ge_120)
+```
+
+
+
+
+**2. Calculate the expected value and variance of the binomial distribution using the moment
+generating function.**
+
+The moment generating function (MGF) for a binomial distribution with parameters $n$ (number of trials) and $p$ (probability of success) is:
+
+$$
+M_{X}(t) = (1 - p + pe^t)^n
+$$
+
+### Mean
+
+The mean $\mu$ is obtained by differentiating the MGF at $t=0$:
+
+$$
+\begin{align*}
+\mu = M'_{X}(0) &= \frac{d}{dt}[(1 - p + pe^t)^n]_{t=0} \\
+&= n(1 - p + pe^t)^{n-1} \cdot pe^t \bigg|_{t=0} \\
+&= np
+\end{align*}
+$$
+
+### Variance
+
+The variance $\sigma^2$ involves the second derivative of the MGF at $t=0$:
+
+$$
+\begin{align*}
+M''_{X}(0) &= \frac{d^2}{dt^2}[(1 - p + pe^t)^n]_{t=0} \\
+&= n(n-1)(1 - p + pe^t)^{n-2} \cdot (pe^t)^2 + n(1 - p + pe^t)^{n-1} \cdot pe^t \bigg|_{t=0} \\
+&= np(1-p)
+\end{align*}
+$$
+
+Thus, $\sigma^2 = np(1-p)$.
+
+**3. Calculate the expected value and variance of the exponential distribution using the moment
+generating function.**
+
+The MGF for an exponential distribution with rate $\lambda$ is:
+
+$$
+M_{X}(t) = \frac{\lambda}{\lambda - t}, \text{ for } t < \lambda
+$$
+
+### Mean
+
+The mean $\mu$ is the first derivative of the MGF evaluated at $t=0$:
+
+$$
+\begin{align*}
+\mu = M'_{X}(0) &= \frac{d}{dt}\left(\frac{\lambda}{\lambda - t}\right)\bigg|_{t=0} \\
+&= \frac{\lambda}{(\lambda - 0)^2} \\
+&= \frac{1}{\lambda}
+\end{align*}
+$$
+
+### Variance
+
+The variance $\sigma^2$ is the second derivative of the MGF at $t=0$ minus the mean squared:
+
+$$
+\begin{align*}
+M''_{X}(0) &= \frac{d^2}{dt^2}\left(\frac{\lambda}{\lambda - t}\right)\bigg|_{t=0} \\
+&= \frac{2\lambda}{(\lambda - 0)^3} \\
+&= \frac{2}{\lambda^2}
+\end{align*}
+$$
+
+Then, $\sigma^2 = M''_{X}(0) - (M'_{X}(0))^2 = \frac{2}{\lambda^2} - \left(\frac{1}{\lambda}\right)^2 = \frac{1}{\lambda^2}$.
+
+
+
