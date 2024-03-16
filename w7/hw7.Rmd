@@ -1,0 +1,120 @@
+
+---
+title: "DATA 605 HW7-YINA QIAO"
+output: html_document
+---
+
+## Problem 1:
+Let \(X_1, X_2, \ldots, X_n\) be \(n\) mutually independent random variables, each uniformly distributed on the integers from 1 to \(k\). Let \(Y\) denote the minimum of the \(X_i\)'s. Find the distribution of Y
+
+Calculate the Cumulative Distribution Function (CDF)
+
+The CDF, \(F_Y(y)\), gives the probability that \(Y\) is less than or equal to \(y\), where \(Y\) is the minimum of a set of independent and identically distributed (i.i.d.) uniform random variables. 
+
+```{r}
+# Function to calculate the CDF of Y, the minimum of n i.i.d. uniform random variables
+cdf_Y <- function(y, n, k) {
+  if(y < 1 || y > k) {
+    return(0)  # y is outside the range of the uniform distribution
+  } else {
+    return(1 - ((k - y) / k)^n)
+  }
+}
+
+# Example: n = 5, k = 10, y = 3
+n <- 5
+k <- 10
+y <- 3
+
+# Calculate the CDF of Y at y
+cdf_at_y <- cdf_Y(y, n, k)
+
+cat("The probability that Y ≤", y, "when n =", n, "and k =", k, "is:", cdf_at_y, "\n")
+
+```
+
+
+## Problem 2: 
+A machine has an expected lifetime of 10 years, implying an expected failure rate of once every ten years. Various probability models are used to analyze the probability of failure after 8 years.
+
+### Part a: geometric
+What is the probability that the machine will fail after 8 years?. Provide also the
+expected value and standard deviation. Model as a geometric. (Hint: the probability is
+equivalent to not failing during the first 8 years..)
+
+```{r geometric}
+p_fail <- 1 / 10  
+# Probability of not failing for first 8 years
+p_notfail_8year <- (1 - p_fail)^8
+
+expected_value_geo <- 1 / p_fail
+std_deviation_geo <- sqrt((1 - p_fail) / p_fail^2)
+
+cat("Probability of not failing during the first 8 years (Geometric): ", p_notfail_8year)
+cat("Expected value (Geometric): ", expected_value_geo)
+cat("Standard deviation (Geometric): ", std_deviation_geo)
+```
+
+### Part b: exponential
+What is the probability that the machine will fail after 8 years?. Provide also the
+expected value and standard deviation. Model as an exponential. 
+
+```{r exponential}
+lambda <- 1 / 10
+# 1-prob machine will fail within 8 years
+p_fail_after_8 <- 1 - pexp(8, lambda) 
+
+expected_value_exp <- 1 / lambda
+std_deviation_exp <- 1 / lambda
+
+
+cat("Probability of fail after 8 years (Exponential): ", p_fail_after_8)
+cat("Expected value (Exponential): ", expected_value_exp)
+cat("Standard deviation (Exponential): ", std_deviation_exp)
+```
+
+### Part c: binomial
+What is the probability that the machine will fail after 8 years?. Provide also the
+expected value and standard deviation. Model as a binomial. (Hint: 0 success in 8
+years) 
+
+```{r binomial}
+n <- 8  
+p <- 1/10  
+
+# Probability of no failures in 8 years (0 successes)
+p_no_failures <- dbinom(0, size = n, prob = p)
+
+
+# Expected value and standard deviation
+expected_value <- n * p
+std_deviation <- sqrt(n * p * (1 - p))
+
+
+cat("Probability of no failures in 8 years:", p_no_failures)
+cat("Expected value (number of failures in 8 years):", expected_value)
+cat("Standard deviation:", std_deviation)
+```
+
+### Part d: poisson
+What is the probability that the machine will fail after 8 years?. Provide also the
+expected value and standard deviation. Model as a Poisson. 
+
+```{r poisson}
+#When modeling the failure of a machine using a Poisson distribution, we interpret the machine's expected lifetime of 10 years as an average failure rate of λ= 1/10
+lambda_8_years <- 1/10*8
+
+# Probability of the no failure in first 8 years
+p_no_failures_8 <- dpois(0, lambda_8_years)
+
+
+# Expected value and standard deviation
+expected_value <- lambda_8_years
+std_deviation <- sqrt(lambda_8_years)
+
+# Display the results
+cat("Probability of the machine no failure in first 8 years:", p_no_failures_8)
+cat("Expected value :", expected_value)
+cat("Standard deviation:", std_deviation)
+
+```

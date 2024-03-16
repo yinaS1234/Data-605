@@ -1,0 +1,43 @@
+
+---
+title: "605 W7D-YINA QIAO"
+output: html_document
+---
+
+## 38 
+
+A manufactured lot of buggy whips has 20 items, of which 5 are defective. A random sample of 5 items is chosen to be inspected. We need to find the probability that the sample contains exactly one defective item under two scenarios:
+
+1. Sampling is done with replacement.
+2. Sampling is done without replacement.
+
+### Solution
+
+#### (a) Sampling with Replacement
+
+When sampling with replacement, each item is put back into the lot before the next item is selected, meaning the probability of picking a defective or non-defective item remains constant with each selection.
+
+- (P(D)): $\frac{1}{4}$
+- (P(N)): $\frac{3}{4}$
+
+The sample can contain exactly one defective item in any one of the following sequences: DNNNN, NDNNN, NNDNN, NNNDN, NNNND, where D represents a defective item and N represents a non-defective item.
+
+the total probability is:
+
+$$ P(\text{exactly one defective}) = 5 \times \left(\frac{1}{4}\right) \times \left(\frac{3}{4}\right)^4 = 0.396 $$
+
+#### (b) Sampling without Replacement
+
+When sampling without replacement, each selected item is not returned to the lot, affecting the probabilities with each selection.
+
+
+
+$$ P(\text{exactly one defective}) = \frac{\binom{5}{1} \times \binom{15}{4}}{\binom{20}{5}} = 0.440 $$
+
+### Conclusion
+
+
+
+- With replacement: The probability is approximately 0.396.
+- Without replacement: The probability is approximately 0.440.
+
