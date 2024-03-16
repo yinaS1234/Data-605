@@ -1,0 +1,23 @@
+---
+title: "W8D-YINA QIAO"
+output: html_document
+---
+
+## page 312  exercise 1
+
+A fair coin is tossed 100 times. The expected number of heads is 50, and the standard deviation for the number of heads is $\sqrt{100 \times \frac{1}{2} \times \frac{1}{2}} = 5$. What does Chebyshev's Inequality tell you about the probability that the number of heads that turn up deviates from the expected number 50 by three or more standard deviations (i.e., by at least 15)?
+
+Using Chebyshev's Inequality where $k=3$, we calculate the maximum probability of an outcome deviating by more than 3 standard deviations as:
+
+```{r}
+k <- 3
+max_probability <- 1/k^2
+max_probability
+```
+
+**Chebyshev's Inequality indicates that at most 11.1% of outcomes deviate from 50 heads by 3 or more standard deviations (15 or more heads).**
+
+
+
+
+

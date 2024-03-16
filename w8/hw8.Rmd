@@ -1,0 +1,102 @@
+
+---
+title: "DATA 605 HW8-YINA QIAO"
+output: html_document
+---
+
+## Problem 11
+
+A company buys 100 lightbulbs, each of which has an exponential lifetime of 1000 hours. What is the expected time for the first of these bulbs to burn out?
+
+### Solution to Problem 11
+
+Given that each lightbulb has an exponential lifetime with a mean (μ) of 1000 hours, and we have 100 lightbulbs (n = 100), we can use the result from Exercise 10. It states that if \(X_1, X_2, \ldots, X_n\) are independent exponential random variables with mean μ, then the minimum value \(M\) among these variables also follows an exponential distribution with mean μ/n.
+
+**Expected time for the first bulb to burn out**: \( E[M] = {\mu}/{n} = {1000}/{100} = 10 \) hours.
+
+This means, statistically, we can expect the first lightbulb to burn out after 10 hours, given that all 100 lightbulbs have an exponential lifetime of 1000 hours and are independent of each other.
+
+
+```{r problem_11_solution}
+
+mu <- 1000  
+n <- 100    
+
+# Calculate the expected time for the first lightbulb to burn out
+expected_time_first_bulb <- mu / n
+
+# Display the result
+cat("The expected time for the first lightbulb to burn out is:", expected_time_first_bulb, "hours")
+```
+
+## Problem 14
+
+Assume that \(X_1\) and \(X_2\) are independent random variables, each having an exponential density with parameter \(\lambda\). Show that \(Z = X_{1} - X_2\) has density \(f_Z(z) = ({1}/{2})\lambda e^{-\lambda|z|}\).
+
+### Solution to Problem 14
+
+- **Given**: $X_1$ and $X_2$ are independent exponential random variables with parameter $\lambda$.
+
+- **To Find**: Density of $Z = X_1 - X_2$.
+
+- **Step 1**: Joint density of $X_1$ and $X_2$ is $f_{X_1, X_2}(x_1, x_2) = \lambda^2 e^{-\lambda(x_1 + x_2)}$.
+
+- **Step 2**: Use transformation $Z = X_1 - X_2$ and $Y = X_1$. Inverse transformations are $X_1 = Y$ and $X_2 = Y - Z$. Jacobian determinant $|J| = 1$.
+
+- **Step 3**: Joint density of $Y$ and $Z$ becomes $f_{Y,Z}(y,z) = \lambda^2 e^{-2\lambda y + \lambda z}$.
+
+- **Step 4**: Integrate out $Y$ to find $f_Z(z)$:
+
+  - For $z \geq 0$: $f_Z(z) = \int_{0}^{\infty} \lambda^2 e^{-2\lambda y + \lambda z} dy = \frac{\lambda}{2} e^{-\lambda z}$.
+  
+  - For $z < 0$: Substitute $u = -z$, then $f_Z(z) = \frac{\lambda}{2} e^{\lambda z}$.
+
+- **Conclusion**: Combining both cases, $f_Z(z) = \frac{1}{2}\lambda e^{-\lambda|z|}$.
+
+## Exercise 1
+1 Let X be a continuous random variable with mean µ = 10 and variance
+σ
+2 = 100/3. Using Chebyshev’s Inequality, find an upper bound for the
+following probabilities.
+8.2. CONTINUOUS RANDOM VARIABLES 321
+(a) P(|X − 10| ≥ 2).
+(b) P(|X − 10| ≥ 5).
+(c) P(|X − 10| ≥ 9).
+(d) P(|X − 10| ≥ 20).
+
+
+### Solution
+- **Given**: A continuous random variable $X$ with mean $\mu = 10$ and variance $\sigma^2 = \frac{100}{3}$.
+
+- **Chebyshev's Inequality**: For any $k > 0$, $P(|X - \mu| \geq k\sigma) \leq \frac{1}{k^2}$.
+
+- **Standard Deviation**: $\sigma = \sqrt{\frac{100}{3}}$.
+
+- **Calculations**:
+
+  - **(a) $P(|X - 10| \geq 2)$**: Here, $k = \frac{2}{\sigma}$. Thus,
+
+    $$P(|X - 10| \geq 2) \leq \frac{1}{(\frac{2}{\sigma})^2} = \frac{\sigma^2}{4}.$$
+
+  - **(b) $P(|X - 10| \geq 5)$**: Here, $k = \frac{5}{\sigma}$. Thus,
+
+    $$P(|X - 10| \geq 5) \leq \frac{1}{(\frac{5}{\sigma})^2} = \frac{\sigma^2}{25}.$$
+
+  - **(c) $P(|X - 10| \geq 9)$**: Here, $k = \frac{9}{\sigma}$. Thus,
+
+    $$P(|X - 10| \geq 9) \leq \frac{1}{(\frac{9}{\sigma})^2} = \frac{\sigma^2}{81}.$$
+
+  - **(d) $P(|X - 10| \geq 20)$**: Here, $k = \frac{20}{\sigma}$. Thus,
+
+    $$P(|X - 10| \geq 20) \leq \frac{1}{(\frac{20}{\sigma})^2} = \frac{\sigma^2}{400}.$$
+
+- **Substituting $\sigma^2 = \frac{100}{3}$**:
+
+  - **(a)** $P(|X - 10| \geq 2) \leq \frac{100}{3} \cdot \frac{1}{4} = \frac{100}{12}$.
+
+  - **(b)** $P(|X - 10| \geq 5) \leq \frac{100}{3} \cdot \frac{1}{25} = \frac{100}{75}$.
+
+  - **(c)** $P(|X - 10| \geq 9) \leq \frac{100}{3} \cdot \frac{1}{81} = \frac{100}{243}$.
+
+  - **(d)** $P(|X - 10| \geq 20) \leq \frac{100}{3} \cdot \frac{1}{400} = \frac{100}{1200}$.
+
